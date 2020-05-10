@@ -15,8 +15,7 @@ namespace CrmApp.Services
         {
             db = _db;
         }
-        
-      
+           
         //CRUD
         // create read update delete
         public Customer CreateCustomer(CustomerOption custOption)
@@ -32,11 +31,15 @@ namespace CrmApp.Services
                 Balance = 0,
             };
 
-            
             db.Customers.Add(customer);
             db.SaveChanges();
       
             return customer;
+        }
+
+        public List<Customer> GetAllCustomers()
+        {
+            return db.Customers.ToList();
         }
 
         public Customer FindCustomerById(int customerId)
@@ -52,7 +55,6 @@ namespace CrmApp.Services
                 .Where(cust => cust.FirstName == custOption.FirstName)
                 .ToList();
         }
-
 
         public Customer Update(CustomerOption custOption, int customerId)
         {
@@ -83,9 +85,18 @@ namespace CrmApp.Services
                 return true;
             }
             return false;    
- 
         }
 
-
+        public bool SoftDeleteCustomerById(int id)
+        {
+            Customer customer = db.Customers.Find(id);
+            if (customer != null)
+            {
+                customer.Active = false;
+                db.SaveChanges();
+                return true;
+            }
+            return false;
+        }
     }
 }

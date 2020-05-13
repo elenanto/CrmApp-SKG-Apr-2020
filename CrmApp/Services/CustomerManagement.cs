@@ -7,13 +7,13 @@ using System.Text;
 
 namespace CrmApp.Services
 {
-    public class CustomerManagement
+    public class CustomerManagement: ICustomerManagement
     {
-        private CrmDbContext db;
+        private CrmDbContext _db;
         
-        public CustomerManagement(CrmDbContext _db)
+        public CustomerManagement(CrmDbContext db)
         {
-            db = _db;
+            _db = db;
         }
            
         //CRUD
@@ -31,26 +31,26 @@ namespace CrmApp.Services
                 Balance = 0,
             };
 
-            db.Customers.Add(customer);
-            db.SaveChanges();
+            _db.Customers.Add(customer);
+            _db.SaveChanges();
       
             return customer;
         }
 
         public List<Customer> GetAllCustomers()
         {
-            return db.Customers.ToList();
+            return _db.Customers.ToList();
         }
 
         public Customer FindCustomerById(int customerId)
         {
    
-            return db.Customers.Find(customerId); 
+            return _db.Customers.Find(customerId); 
         }
 
         public List<Customer> FindCustomerByName(CustomerOption custOption)
         {
-            return db.Customers
+            return _db.Customers
                 .Where(cust => cust.LastName == custOption.LastName)
                 .Where(cust => cust.FirstName == custOption.FirstName)
                 .ToList();
@@ -59,7 +59,7 @@ namespace CrmApp.Services
         public Customer Update(CustomerOption custOption, int customerId)
         {
              
-            Customer customer = db.Customers.Find(customerId);
+            Customer customer = _db.Customers.Find(customerId);
 
             if (custOption.FirstName!=null)
                 customer.FirstName = custOption.FirstName;
@@ -70,18 +70,18 @@ namespace CrmApp.Services
             if (custOption.Address != null)
                 customer.Address = custOption.Address;
 
-            db.SaveChanges();
+            _db.SaveChanges();
             return customer;
         }
 
         public bool DeleteCustomerById(int id)
         {
              
-            Customer customer = db.Customers.Find(id);
+            Customer customer = _db.Customers.Find(id);
             if (customer != null)
             {
-                db.Customers.Remove(customer);
-                db.SaveChanges();
+                _db.Customers.Remove(customer);
+                _db.SaveChanges();
                 return true;
             }
             return false;    
@@ -89,11 +89,11 @@ namespace CrmApp.Services
 
         public bool SoftDeleteCustomerById(int id)
         {
-            Customer customer = db.Customers.Find(id);
+            Customer customer = _db.Customers.Find(id);
             if (customer != null)
             {
                 customer.Active = false;
-                db.SaveChanges();
+                _db.SaveChanges();
                 return true;
             }
             return false;

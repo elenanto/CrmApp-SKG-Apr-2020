@@ -13,7 +13,9 @@ namespace CrmApp.Repository
        public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketProduct> BasketProducts { get; set; }
 
-        private readonly string connectionString =
+        //private: connectionstring' is inaccessible due to its protection level
+        //private -> public
+        public readonly static string ConnectionString =
             "Data Source=localhost;" +
             "Initial Catalog = SkgCrm; " +
             "Integrated Security = True;";
@@ -26,7 +28,7 @@ namespace CrmApp.Repository
         protected override void OnConfiguring
             (DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseSqlServer(ConnectionString);
         }
 
 
